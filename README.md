@@ -8,11 +8,11 @@ The task is to implement and evaluate a reinforcement learning agent in a walkin
 ## POLICY EVALUATION FUNCTION
 The policy evaluation function aims to compute the value of a given policy by iteratively calculating the expected rewards of following the policy in each state until convergence, allowing for better estimation of state values under the current policy.
 ## PROGRAM:
-```
+```py
 pip install git+https://github.com/mimoralea/gym-walk#egg=gym-walk
 
 ```
-```
+```py
 import warnings ; warnings.filterwarnings('ignore')
 
 import gym, gym_walk
@@ -25,7 +25,7 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 np.set_printoptions(suppress=True)
 random.seed(123); np.random.seed(123)
 ```
-```
+```py
 def print_policy(pi, P, action_symbols=('<', 'v', '>', '^'), n_cols=4, title='Policy:'):
     print(title)
     arrs = {k:v for k,v in enumerate(action_symbols)}
@@ -38,7 +38,7 @@ def print_policy(pi, P, action_symbols=('<', 'v', '>', '^'), n_cols=4, title='Po
             print(str(s).zfill(2), arrs[a].rjust(6), end=" ")
         if (s + 1) % n_cols == 0: print("|")
 ```
-```
+```py
 def print_state_value_function(V, P, n_cols=4, prec=3, title='State-value function:'):
     print(title)
     for s in range(len(P)):
@@ -50,7 +50,7 @@ def print_state_value_function(V, P, n_cols=4, prec=3, title='State-value functi
             print(str(s).zfill(2), '{}'.format(np.round(v, prec)).rjust(6), end=" ")
         if (s + 1) % n_cols == 0: print("|")
 ```
-```
+```py
 def probability_success(env, pi, goal_state, n_episodes=100, max_steps=200):
     random.seed(123); np.random.seed(123) ; env.seed(123)
     results = []
@@ -62,37 +62,37 @@ def probability_success(env, pi, goal_state, n_episodes=100, max_steps=200):
         results.append(state == goal_state)
     return np.sum(results)/len(results)
 ```
-```
+```py
 env = gym.make('SlipperyWalkFive-v0')
 P = env.env.P
 init_state = env.reset()
 goal_state = 6
 LEFT, RIGHT = range(2)
 ```
-```
+```py
 P
 ```
-```
+```py
 init_state
 ```
-```
+```py
 state, reward, done, info = env.step(RIGHT)
 print("state:{0} - reward:{1} - done:{2} - info:{3}".format(state, reward, done, info))
 ```
-```
+```py
 # First Policy
 pi_1 = lambda s: {
     0:LEFT, 1:LEFT, 2:LEFT, 3:LEFT, 4:LEFT, 5:LEFT, 6:LEFT
 }[s]
 print_policy(pi_1, P, action_symbols=('<', '>'), n_cols=7)
 ```
-```
+```py
 pi_2 = lambda s: {
     0:LEFT, 1:LEFT, 2:RIGHT, 3:LEFT, 4:LEFT, 5:RIGHT, 6:RIGHT
 }[s]
 print_policy(pi_2, P, action_symbols=('<', '>'), n_cols=7)
 ```
-```
+```py
 def mean_return(env, pi, n_episodes=100, max_steps=200):
     random.seed(123); np.random.seed(123) ; env.seed(123)
     results = []
@@ -105,17 +105,17 @@ def mean_return(env, pi, n_episodes=100, max_steps=200):
             steps += 1
     return np.mean(results)
 ```
-```
+```py
 # Find the probability of success and the mean return of the first policy
 print('Reaches goal {:.2f}%. Obtains an average undiscounted return of {:.4f}.'.format(
     probability_success(env, pi_1, goal_state=goal_state)*100,mean_return(env, pi_1)))
 ```
-```
+```py
 # Find the probability of success and the mean return of the first policy
 print('Reaches goal {:.2f}%. Obtains an average undiscounted return of {:.4f}.'.format(
     probability_success(env, pi_2, goal_state=goal_state)*100,mean_return(env, pi_2)))
 ```
-```
+```py
 # Calculate the success probability and mean return for both policies
 success_prob_pi_1 = probability_success(env, pi_1, goal_state=goal_state)
 mean_return_pi_1 = mean_return(env, pi_1)
@@ -123,7 +123,7 @@ mean_return_pi_1 = mean_return(env, pi_1)
 success_prob_pi_2 = probability_success(env, pi_2, goal_state=goal_state)
 mean_return_pi_2 = mean_return(env, pi_2)
 ```
-```
+```py
 def policy_evaluation(pi, P, gamma=1.0, theta=1e-10):
     prev_V = np.zeros(len(P), dtype=np.float64)
     # Write your code here to evaluate the given policy
@@ -137,18 +137,18 @@ def policy_evaluation(pi, P, gamma=1.0, theta=1e-10):
       prev_V = V.copy()
     return V
 ```
-```
+```py
 # Code to evaluate the first policy
 V1 = policy_evaluation(pi_1, P)
 print_state_value_function(V1, P, n_cols=7, prec=5)
 ```
-```
+```py
 # Code to evaluate the second policy
 # Write your code here
 V2 = policy_evaluation(pi_2, P)
 print_state_value_function(V2, P, n_cols=7, prec=5)
 ```
-```
+```py
 # Comparing the two policies
 
 # Compare the two policies based on the value function using the above equation and find the best policy
